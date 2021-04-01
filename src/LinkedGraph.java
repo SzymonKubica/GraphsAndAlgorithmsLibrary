@@ -2,6 +2,11 @@ import java.util.*;
 
 public class LinkedGraph<T> implements Graph<T> {
   public Node<T> first;
+  public Set<Node<T>> nodes;
+
+  public LinkedGraph() {
+    nodes = new HashSet<>();
+  }
 
   public List<T> DFS(Node<T> start) {
     List<T> accumulator = new LinkedList<>();
@@ -72,7 +77,7 @@ public class LinkedGraph<T> implements Graph<T> {
     distanceMap.put(start, 0);
     while (!queue.isEmpty()) {
       Node<T> current = queue.peek();
-      for(Node<T> neighbour : current.adjacentNodes) {
+      for (Node<T> neighbour : current.adjacentNodes) {
         if (!visitedNodes.contains(neighbour)) {
           visitedNodes.add(neighbour);
           childParentMap.put(neighbour, current);
@@ -83,5 +88,42 @@ public class LinkedGraph<T> implements Graph<T> {
       queue.remove();
     }
     return distanceMap;
+  }
+
+  public List<T> topologicalSort(Node<T> start) {
+    List<T> result = new ArrayList<>();
+    try {
+      Set<Node<T>> enteredNodes = new HashSet<>();
+      Set<Node<T>> exitedNodes = new HashSet<>();
+      DFSTopologicalSort(start, enteredNodes, exitedNodes, result);
+      for (Node<T> node : nodes) {
+        if (!enteredNodes.contains(node)) {
+          DFSTopologicalSort(node, enteredNodes, exitedNodes, result);
+        }
+      }
+    } catch (CyclicTreeException e) {
+      System.out.println("The graph must be acyclic!");
+    }
+    return result;
+  }
+
+  private void DFSTopologicalSort(
+          Node<T> start,
+          Set<Node<T>> enteredNodes,
+          Set<Node<T>> exitedNodes,
+          List<T> accumulator
+  ) throws CyclicTreeException {
+    enteredNodes.add(start);
+    for (Node<T> neighbour : start.adjacentNodes) {
+      if (enteredNodes.contains(neighbour)) {
+        if (!exitedNodes.contains(neighbour)) {
+          throw new CyclicTreeException();
+        }
+      } else {
+        DFSTopologicalSort(neighbour, enteredNodes, exitedNodes, accumulator);
+      }
+    }
+    exitedNodes.add(start);
+    accumulator.add(0, start.element);
   }
 }
