@@ -1,4 +1,6 @@
-public class SimpleGraph {
+import java.util.Arrays;
+
+public class SimpleGraph implements Graph<Integer>{
   private final int[][] adjacencyMatrix;
 
   public SimpleGraph(int numberOfNodes) {
@@ -22,10 +24,6 @@ public class SimpleGraph {
     return adjacencyMatrix[translateIndex(nodeOrigin)][translateIndex(nodeDestination)] != 0;
   }
 
-  public int getNumberOfNodes() {
-    return adjacencyMatrix.length;
-  }
-
   public boolean isValidNode(int nodeNumber) {
     return nodeNumber <= getNumberOfNodes();
   }
@@ -38,6 +36,14 @@ public class SimpleGraph {
 
   public int getNodeName(int index) {
     return index + 1;
+  }
+
+  public int getNodeDegree(int nodeName) {
+    return Arrays.stream(adjacencyMatrix[translateIndex(nodeName)]).sum();
+  }
+
+  public int getNumberOfNodes() {
+    return adjacencyMatrix.length;
   }
 
   @Override
