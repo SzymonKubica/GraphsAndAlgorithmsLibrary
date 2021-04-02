@@ -1,6 +1,8 @@
+package matrixGraph;
+
 import java.util.Arrays;
 
-public class SimpleGraph implements Graph<Integer>{
+public class SimpleGraph {
   private final int[][] adjacencyMatrix;
 
   public SimpleGraph(int numberOfNodes) {
@@ -56,7 +58,7 @@ public class SimpleGraph implements Graph<Integer>{
       sb.append(getNodeName(i));
       for (int j = 0; j < adjacencyMatrix[i].length; j++) {
         for (int k = 0; k < adjacencyMatrix[i][j]; k++) {
-          sb.append(" -> " + getNodeName(j));
+          sb.append(" -> ").append(getNodeName(j));
         }
       }
     }
