@@ -34,6 +34,4 @@ public class UndirectedGraph<T> implements Graph<T> {
   public int getNumberOfNodes() {
     return nodes.size();
   }
-
-
 }

@@ -33,6 +33,13 @@ public class GraphAlgorithmTest {
     Assert.assertEquals(expectedOutput, GraphAlgorithm.shortestPathsFrom(testGraph.first).toString());
   }
 
+  @Test
+  public void topologicalSortTest() {
+    DirectedGraph<Integer> graph = getGraphForTopologicalSort();
+    String expected = "[6, 3, 4, 1, 2, 5, 7]";
+    Assert.assertEquals(expected, GraphAlgorithm.topologicalSort(graph, graph.first).toString());
+  }
+
   private DirectedGraph<Integer> getIntegerDirectedGraph() {
     DirectedGraph<Integer> graph = new DirectedGraph<>();
 
@@ -45,9 +52,8 @@ public class GraphAlgorithmTest {
     Node<Integer> node7 = new Node<>(7, graph);
     Node<Integer> node8 = new Node<>(8, graph);
     Node<Integer> node9 = new Node<>(9, graph);
-    graph.first = new Node<>(1);
-    graph.first = node1;
 
+    graph.first = node1;
     graph.addEdge(node1, node2);
     graph.addEdge(node1, node3);
     graph.addEdge(node1, node4);
@@ -56,6 +62,36 @@ public class GraphAlgorithmTest {
     graph.addEdge(node5, node7);
     graph.addEdge(node7, node8);
     graph.addEdge(node7, node9);
+
+    return graph;
+  }
+
+  private DirectedGraph<Integer> getGraphForTopologicalSort() {
+    DirectedGraph<Integer> graph = new DirectedGraph<>();
+
+    Node<Integer> node1 = new Node<>(1);
+    Node<Integer> node2 = new Node<>(2);
+    Node<Integer> node3 = new Node<>(3);
+    Node<Integer> node4 = new Node<>(4);
+    Node<Integer> node5 = new Node<>(5);
+    Node<Integer> node6 = new Node<>(6);
+    Node<Integer> node7 = new Node<>(7);
+
+    graph.addNode(node1);
+    graph.addNode(node2);
+    graph.addNode(node3);
+    graph.addNode(node4);
+    graph.addNode(node5);
+    graph.addNode(node6);
+    graph.addNode(node7);
+
+    graph.first = node1;
+    graph.addEdge(node1, node2);
+    graph.addEdge(node2, node7);
+    graph.addEdge(node2, node5);
+    graph.addEdge(node3, node4);
+    graph.addEdge(node4, node5);
+    graph.addEdge(node6, node2);
 
     return graph;
   }

@@ -1,6 +1,7 @@
 package linkedNodeGraph;
 
 public class WeightedEdge<T> {
+
   private final Node<T> origin;
   private final Node<T> destination;
   private final int weight;

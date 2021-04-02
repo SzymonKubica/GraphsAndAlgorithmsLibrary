@@ -11,5 +11,4 @@ public interface Graph<T> {
   Set<Node<T>> getNodes();
 
   int getNumberOfNodes();
-
 }

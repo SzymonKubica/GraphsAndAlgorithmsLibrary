@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class UndirectedGraphTest {
+
   @Test
   public void edgesGoBothWaysTest() {
     Graph<Integer> test = new UndirectedGraph<>();

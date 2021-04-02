@@ -61,5 +61,4 @@ public class WeightedGraph<T> extends UndirectedGraph<T> {
     return mst.nodes.contains(edge.getOrigin()) && fringe.contains(edge.getDestination())
             || mst.nodes.contains(edge.getDestination()) && fringe.contains(edge.getOrigin());
   }
-
 }
