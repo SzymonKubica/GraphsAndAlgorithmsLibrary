@@ -34,4 +34,19 @@ public class UndirectedGraph<T> implements Graph<T> {
   public int getNumberOfNodes() {
     return nodes.size();
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for (Node<T> node : nodes) {
+      sb.append(node).append(" -> ");
+      for (Node<T> neighbour : node.adjacentNodes) {
+        sb.append(neighbour).append(" -> ");
+      }
+      // Deleting the excess arrow.
+      sb.delete(sb.length() - 4, sb.length() - 1);
+      sb.append("\n");
+    }
+    return sb.toString();
+  }
 }

@@ -3,26 +3,26 @@ package linkedNodeGraph;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class GraphAlgorithmTest {
+public class GraphAlgorithmsTest {
   @Test
   public void breadthFirstSearchTest() {
     DirectedGraph<Integer> testGraph = getIntegerDirectedGraph();
-    Assert.assertEquals("[1, 2, 3, 4, 5, 6, 7, 8, 9]", GraphAlgorithm.BFS(testGraph.first).toString());
+    Assert.assertEquals("[1, 2, 3, 4, 5, 6, 7, 8, 9]", GraphAlgorithms.BFS(testGraph.first).toString());
   }
 
   @Test
   public void depthFirstSearchTest() {
     DirectedGraph<Integer> testGraph = getIntegerDirectedGraph();
-    Assert.assertEquals("[1, 2, 3, 5, 7, 8, 9, 6, 4]", GraphAlgorithm.DFS(testGraph.first).toString());
+    Assert.assertEquals("[1, 2, 3, 5, 7, 8, 9, 6, 4]", GraphAlgorithms.DFS(testGraph.first).toString());
   }
 
   @Test
   public void isCyclicTest() {
     DirectedGraph<Integer> testGraph = getIntegerDirectedGraph();
-    Assert.assertFalse(GraphAlgorithm.isCyclic(testGraph));
+    Assert.assertFalse(GraphAlgorithms.isCyclic(testGraph));
     // Introducing a cycle.
     testGraph.first.adjacentNodes.get(0).adjacentNodes.add(testGraph.first.adjacentNodes.get(1).adjacentNodes.get(0));
-    Assert.assertTrue(GraphAlgorithm.isCyclic(testGraph));
+    Assert.assertTrue(GraphAlgorithms.isCyclic(testGraph));
   }
 
   @Test
@@ -30,15 +30,37 @@ public class GraphAlgorithmTest {
     DirectedGraph<Integer> testGraph = getIntegerDirectedGraph();
     String expectedOutput = "{(Node: 1)=0, (Node: 2)=1, (Node: 3)=1, (Node: 4)=1, (Node: 5)=2, " +
             "(Node: 6)=2, (Node: 7)=3, (Node: 8)=4, (Node: 9)=4}";
-    Assert.assertEquals(expectedOutput, GraphAlgorithm.shortestPathsFrom(testGraph.first).toString());
+    Assert.assertEquals(expectedOutput, GraphAlgorithms.shortestPathsFrom(testGraph.first).toString());
   }
 
   @Test
   public void topologicalSortTest() {
     DirectedGraph<Integer> graph = getGraphForTopologicalSort();
     String expected = "[6, 3, 4, 1, 2, 5, 7]";
-    Assert.assertEquals(expected, GraphAlgorithm.topologicalSort(graph, graph.first).toString());
+    Assert.assertEquals(expected, GraphAlgorithms.topologicalSort(graph, graph.first).toString());
   }
+
+  @Test
+  public void primsMSTTest() {
+    WeightedGraph<Integer> graphForMST = getWeightedGraphForMST();
+    Tree<Integer> minimumSpanningTree = GraphAlgorithms.MSTprim(graphForMST, graphForMST.first);
+    Assert.assertEquals(
+            "(Node: 1) -> (Node: 2) -> (Node: 4) \n" +
+                    "(Node: 2) -> (Node: 1) \n" +
+                    "(Node: 3) -> (Node: 4) \n" +
+                    "(Node: 4) -> (Node: 1) -> (Node: 3) \n",
+            minimumSpanningTree.toString()
+    );
+  }
+
+  @Test
+  public void kruskalMSTTest() {
+    WeightedGraph<Integer> graphForMST = getWeightedGraphForMST();
+    Tree<Integer> minimumSpanningTree = GraphAlgorithms.MSTkruskal(graphForMST, graphForMST.first);
+    System.out.println(minimumSpanningTree);
+
+  }
+
 
   private DirectedGraph<Integer> getIntegerDirectedGraph() {
     DirectedGraph<Integer> graph = new DirectedGraph<>();
@@ -93,6 +115,23 @@ public class GraphAlgorithmTest {
     graph.addEdge(node4, node5);
     graph.addEdge(node6, node2);
 
+    return graph;
+  }
+
+  private WeightedGraph<Integer> getWeightedGraphForMST() {
+    WeightedGraph<Integer> graph = new WeightedGraph<>();
+
+    Node<Integer> node1 = new Node<>(1, graph);
+    Node<Integer> node2 = new Node<>(2, graph);
+    Node<Integer> node3 = new Node<>(3, graph);
+    Node<Integer> node4 = new Node<>(4, graph);
+
+    graph.first = node1;
+    graph.addEdgeWithWeight(node1, node2, 3);
+    graph.addEdgeWithWeight(node2, node3, 4);
+    graph.addEdgeWithWeight(node3, node4, 2);
+    graph.addEdgeWithWeight(node4, node1, 4);
+    graph.addEdgeWithWeight(node1, node3, 5);
     return graph;
   }
 }

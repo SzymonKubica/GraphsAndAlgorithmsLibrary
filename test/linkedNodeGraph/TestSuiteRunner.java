@@ -9,7 +9,7 @@ public class TestSuiteRunner {
     Result result =
             JUnitCore.runClasses(
                     linkedNodeGraph.DirectedGraphTest.class,
-                    linkedNodeGraph.GraphAlgorithmTest.class,
+                    GraphAlgorithmsTest.class,
                     linkedNodeGraph.NodeTest.class,
                     linkedNodeGraph.UndirectedGraphTest.class
             );

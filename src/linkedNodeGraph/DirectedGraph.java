@@ -3,7 +3,6 @@ package linkedNodeGraph;
 import java.util.*;
 
 public class DirectedGraph<T> extends UndirectedGraph<T> {
-
   public DirectedGraph() {
     super.nodes = new HashSet<>();
   }
