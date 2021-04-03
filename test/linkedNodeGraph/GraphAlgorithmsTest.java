@@ -3,6 +3,8 @@ package linkedNodeGraph;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+
 public class GraphAlgorithmsTest {
   @Test
   public void breadthFirstSearchTest() {
@@ -43,12 +45,12 @@ public class GraphAlgorithmsTest {
   @Test
   public void primsMSTTest() {
     WeightedGraph<Integer> graphForMST = getWeightedGraphForMST();
-    Tree<Integer> minimumSpanningTree = GraphAlgorithms.MSTprim(graphForMST, graphForMST.first);
+    Tree<Integer> minimumSpanningTree = GraphAlgorithms.MST_Prim(graphForMST, graphForMST.first);
     Assert.assertEquals(
-            "(Node: 1) -> (Node: 2) -> (Node: 4) \n" +
-                    "(Node: 2) -> (Node: 1) \n" +
-                    "(Node: 3) -> (Node: 4) \n" +
-                    "(Node: 4) -> (Node: 1) -> (Node: 3) \n",
+            "(Node: 1) -> (Node: 2) \n" +
+                    "(Node: 2) -> (Node: 1) -> (Node: 3) \n" +
+                    "(Node: 3) -> (Node: 2) -> (Node: 4) \n" +
+                    "(Node: 4) -> (Node: 3) \n",
             minimumSpanningTree.toString()
     );
   }
@@ -56,9 +58,26 @@ public class GraphAlgorithmsTest {
   @Test
   public void kruskalMSTTest() {
     WeightedGraph<Integer> graphForMST = getWeightedGraphForMST();
-    Tree<Integer> minimumSpanningTree = GraphAlgorithms.MSTkruskal(graphForMST, graphForMST.first);
-    System.out.println(minimumSpanningTree);
+    Tree<Integer> minimumSpanningTree = GraphAlgorithms.MST_Kruskal(graphForMST, graphForMST.first);
+    Assert.assertEquals(
+            "(Node: 1) -> (Node: 2) -> (Node: 4) \n" +
+                    "(Node: 2) -> (Node: 1) \n" +
+                    "(Node: 3) -> (Node: 4) \n" +
+                    "(Node: 4) -> (Node: 3) -> (Node: 1) \n",
+            minimumSpanningTree.toString()
+    );
+  }
 
+  @Test
+  public void shortestPathDijkstraTest() {
+    WeightedGraph<Integer> graphForDijkstra = getWeightedGraphForDijkstraShortestPath();
+
+    String expected = "[(Node: 1), (Node: 3), (Node: 4), (Node: 5), (Node: 6), (Node: 7)]";
+    Assert.assertEquals(expected,
+            GraphAlgorithms.shortestPathFromTo(
+                    graphForDijkstra.first,
+                    graphForDijkstra.nodes.stream().filter(node -> node.element == 7)
+                            .collect(Collectors.toList()).get(0), graphForDijkstra).toString());
   }
 
 
@@ -133,5 +152,31 @@ public class GraphAlgorithmsTest {
     graph.addEdgeWithWeight(node4, node1, 4);
     graph.addEdgeWithWeight(node1, node3, 5);
     return graph;
+  }
+
+  private WeightedGraph<Integer> getWeightedGraphForDijkstraShortestPath() {
+    WeightedGraph<Integer> graph = new WeightedGraph<>();
+
+    Node<Integer> node1 = new Node<>(1, graph);
+    Node<Integer> node2 = new Node<>(2, graph);
+    Node<Integer> node3 = new Node<>(3, graph);
+    Node<Integer> node4 = new Node<>(4, graph);
+    Node<Integer> node5 = new Node<>(5, graph);
+    Node<Integer> node6 = new Node<>(6, graph);
+    Node<Integer> node7 = new Node<>(7, graph);
+
+    graph.first = node1;
+    graph.addEdgeWithWeight(node1, node2, 10);
+    graph.addEdgeWithWeight(node1, node4, 8);
+    graph.addEdgeWithWeight(node1, node3, 3);
+    graph.addEdgeWithWeight(node2, node6, 7);
+    graph.addEdgeWithWeight(node2, node4, 9);
+    graph.addEdgeWithWeight(node3, node4, 4);
+    graph.addEdgeWithWeight(node4, node5, 6);
+    graph.addEdgeWithWeight(node5, node6, 3);
+    graph.addEdgeWithWeight(node6, node7, 4);
+
+    return graph;
+
   }
 }

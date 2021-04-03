@@ -133,7 +133,7 @@ public class GraphAlgorithms {
     return false;
   }
 
-  public static <T> Tree<T> MSTprim(WeightedGraph<T> graph, Node<T> start) {
+  public static <T> Tree<T> MST_Prim(WeightedGraph<T> graph, Node<T> start) {
     Tree<T> mst = new Tree<>();
     Set<Node<T>> fringe = new HashSet<>();
     Map<Node<T>, Integer> weightOfNodesMap = new HashMap<>();
@@ -192,7 +192,62 @@ public class GraphAlgorithms {
     return fringe.stream().min(Comparator.comparingInt(node -> weightOfNodesMap.get(node))).get();
   }
 
-  public static <T> Tree<T> MSTkruskal(WeightedGraph<T> graph, Node<T> start) {
+  public static <T> List<Node<T>> shortestPathFromTo(Node<T> start, Node<T> finish, WeightedGraph<T> graph) {
+    Tree<T> mst = new Tree<>();
+    Set<Node<T>> fringe = new HashSet<>();
+    Map<Node<T>, Integer> weightOfNodesMap = new HashMap<>();
+    Map<Node<T>, Node<T>> childParentMap = new HashMap<>();
+    weightOfNodesMap.put(start, 0);
+
+    for (Node<T> neighbour : start.adjacentNodes) {
+      fringe.add(neighbour);
+      weightOfNodesMap.put(neighbour, graph.getEdgeWeight(start, neighbour));
+      childParentMap.put(neighbour, start);
+    }
+
+    mst.addRoot(start);
+
+    while (!fringe.isEmpty() && !mst.nodes.contains(finish)) {
+      Node<T> closestNode = getMinimumWeightFringeNode(fringe, weightOfNodesMap);
+      WeightedEdge<T> minWeightEdge = getMinimumFringeEdgeEndingAt(closestNode, mst, graph);
+
+      mst.addNode(closestNode);
+      mst.addEdge(minWeightEdge);
+      fringe.remove(closestNode);
+
+      for (Node<T> neighbour : closestNode.adjacentNodes) {
+        if (!mst.nodes.contains(neighbour)) {
+          if (fringe.contains(neighbour)) {
+            // Updating candidate arc.
+            int neighbourWeight = weightOfNodesMap.get(closestNode) + graph.getEdgeWeight(closestNode, neighbour);
+            if (neighbourWeight < weightOfNodesMap.get(neighbour)) {
+              weightOfNodesMap.put(neighbour, weightOfNodesMap.get(closestNode) + graph.getEdgeWeight(closestNode, neighbour));
+              childParentMap.put(neighbour, closestNode);
+            }
+          } else {
+            // neighbour is unseen.
+            fringe.add(neighbour);
+            weightOfNodesMap.put(neighbour, weightOfNodesMap.get(closestNode) + graph.getEdgeWeight(closestNode, neighbour));
+            childParentMap.put(neighbour, closestNode);
+          }
+        }
+      }
+    }
+
+    List<Node<T>> shortestPath = new LinkedList<>();
+    Node<T> ancestorOfFinish = childParentMap.get(finish);
+    shortestPath.add(finish);
+    shortestPath.add(0, ancestorOfFinish);
+
+    while (!ancestorOfFinish.equals(start)) {
+      ancestorOfFinish = childParentMap.get(ancestorOfFinish);
+      shortestPath.add(0, ancestorOfFinish);
+    }
+
+    return shortestPath;
+  }
+
+  public static <T> Tree<T> MST_Kruskal(WeightedGraph<T> graph, Node<T> start) {
     Queue<WeightedEdge<T>> edgeQueue = new PriorityQueue<>(Comparator.comparingInt(WeightedEdge::getWeight));
     edgeQueue.addAll(graph.getEdges());
     Set<UnionFind<T>> sets = createSets(graph.nodes);
@@ -213,7 +268,7 @@ public class GraphAlgorithms {
         if (!forest.nodes.contains(edge.getDestination())) {
           forest.addNode(edge.getDestination());
         }
-        forest.addEdge(edge.getDestination(), edge.getOrigin());
+        forest.addEdge(edge);
         UnionFind.union(sets, originLeader, destinationLeader);
       }
     }

@@ -1,6 +1,7 @@
 package linkedNodeGraph;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Tree<T> extends UndirectedGraph<T> {
   public Node<T> root;
@@ -15,16 +16,19 @@ public class Tree<T> extends UndirectedGraph<T> {
   @Override
   public void addEdge(Node<T> origin, Node<T> destination) {
     super.addEdge(origin, destination);
-    assert !GraphAlgorithms.isCyclic(this) : "The tree needs to be acyclic.";
   }
 
   @Override
   public void addNode(Node<T> node) {
-    node.adjacentNodes = new ArrayList<>();
-    super.addNode(node);
+    Node<T> newNode = new Node<>(node.element);
+    super.addNode(newNode);
   }
 
   public void addEdge(WeightedEdge<T> edge) {
-    this.addEdge(edge.getOrigin(), edge.getDestination());
+    Node<T> thisOrigin = nodes.stream().filter(node -> node.element.equals(edge.getOrigin().element))
+            .collect(Collectors.toList()).get(0);
+    Node<T> thisDestination = nodes.stream().filter(node -> node.element.equals(edge.getDestination().element))
+            .collect(Collectors.toList()).get(0);
+    this.addEdge(thisOrigin, thisDestination);
   }
 }
