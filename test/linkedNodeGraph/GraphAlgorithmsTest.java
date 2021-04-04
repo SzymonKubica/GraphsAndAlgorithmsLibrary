@@ -74,12 +74,23 @@ public class GraphAlgorithmsTest {
 
     String expected = "[(Node: 1), (Node: 3), (Node: 4), (Node: 5), (Node: 6), (Node: 7)]";
     Assert.assertEquals(expected,
-            GraphAlgorithms.shortestPathFromTo(
+            GraphAlgorithms.shortestPathFromTo_Dijkstra(
                     graphForDijkstra.first,
                     graphForDijkstra.nodes.stream().filter(node -> node.element == 7)
                             .collect(Collectors.toList()).get(0), graphForDijkstra).toString());
   }
 
+  @Test
+  public void shortestPathAStarTest() {
+    WeightedGraph<Integer> graphForAStar = getWeightedGraphForDijkstraShortestPath();
+
+    String expected = "[(Node: 1), (Node: 3), (Node: 4), (Node: 5), (Node: 6), (Node: 7)]";
+    Assert.assertEquals(expected,
+            GraphAlgorithms.shortestPathFromTo_Dijkstra(
+                    graphForAStar.first,
+                    graphForAStar.nodes.stream().filter(node -> node.element == 7)
+                            .collect(Collectors.toList()).get(0), graphForAStar).toString());
+  }
 
   private DirectedGraph<Integer> getIntegerDirectedGraph() {
     DirectedGraph<Integer> graph = new DirectedGraph<>();

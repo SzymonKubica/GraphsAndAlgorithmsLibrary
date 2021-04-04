@@ -192,7 +192,7 @@ public class GraphAlgorithms {
     return fringe.stream().min(Comparator.comparingInt(node -> weightOfNodesMap.get(node))).get();
   }
 
-  public static <T> List<Node<T>> shortestPathFromTo(Node<T> start, Node<T> finish, WeightedGraph<T> graph) {
+  public static <T> List<Node<T>> shortestPathFromTo_Dijkstra(Node<T> start, Node<T> finish, WeightedGraph<T> graph) {
     Tree<T> mst = new Tree<>();
     Set<Node<T>> fringe = new HashSet<>();
     Map<Node<T>, Integer> weightOfNodesMap = new HashMap<>();
@@ -229,6 +229,71 @@ public class GraphAlgorithms {
             fringe.add(neighbour);
             weightOfNodesMap.put(neighbour, weightOfNodesMap.get(closestNode) + graph.getEdgeWeight(closestNode, neighbour));
             childParentMap.put(neighbour, closestNode);
+          }
+        }
+      }
+    }
+
+    List<Node<T>> shortestPath = new LinkedList<>();
+    Node<T> ancestorOfFinish = childParentMap.get(finish);
+    shortestPath.add(finish);
+    shortestPath.add(0, ancestorOfFinish);
+
+    while (!ancestorOfFinish.equals(start)) {
+      ancestorOfFinish = childParentMap.get(ancestorOfFinish);
+      shortestPath.add(0, ancestorOfFinish);
+    }
+
+    return shortestPath;
+  }
+
+  public static <T> List<Node<T>> shortestPathFromTo_AStar(
+          Node<T> start,
+          Node<T> finish,
+          WeightedGraph<T> graph,
+          Map<Node<T>, Integer> heuristic
+  ) {
+    Tree<T> mst = new Tree<>();
+    Set<Node<T>> fringe = new HashSet<>();
+    Map<Node<T>, Integer> weightOfNodesMap = new HashMap<>();
+    Map<Node<T>, Integer> weightOfNodesWithHeuristicMap = new HashMap<>();
+    Map<Node<T>, Node<T>> childParentMap = new HashMap<>();
+    weightOfNodesMap.put(start, 0);
+    weightOfNodesWithHeuristicMap.put(start, weightOfNodesMap.get(start) + heuristic.get(start));
+
+    for (Node<T> neighbour : start.adjacentNodes) {
+      fringe.add(neighbour);
+      childParentMap.put(neighbour, start);
+      weightOfNodesMap.put(neighbour, graph.getEdgeWeight(start, neighbour));
+      weightOfNodesWithHeuristicMap.put(neighbour, weightOfNodesMap.get(neighbour) + heuristic.get(neighbour));
+    }
+
+    mst.addRoot(start);
+
+    while (!fringe.isEmpty() && !mst.nodes.contains(finish)) {
+      Node<T> closestNode = getMinimumWeightFringeNode(fringe, weightOfNodesWithHeuristicMap);
+      WeightedEdge<T> minWeightEdge = getMinimumFringeEdgeEndingAt(closestNode, mst, graph);
+
+      mst.addNode(closestNode);
+      mst.addEdge(minWeightEdge);
+      fringe.remove(closestNode);
+
+      for (Node<T> neighbour : closestNode.adjacentNodes) {
+        if (!mst.nodes.contains(neighbour)) {
+          if (fringe.contains(neighbour)) {
+            // Updating candidate arc.
+            int neighbourWeight = weightOfNodesMap.get(closestNode) + graph.getEdgeWeight(closestNode, neighbour);
+            if (neighbourWeight < weightOfNodesMap.get(neighbour)) {
+              weightOfNodesMap.put(neighbour, weightOfNodesMap.get(closestNode) + graph.getEdgeWeight(closestNode, neighbour));
+              childParentMap.put(neighbour, closestNode);
+              weightOfNodesWithHeuristicMap.put(neighbour, weightOfNodesMap.get(neighbour) + heuristic.get(neighbour));
+            }
+          } else {
+            // neighbour is unseen.
+            fringe.add(neighbour);
+            weightOfNodesMap.put(neighbour, weightOfNodesMap.get(closestNode) + graph.getEdgeWeight(closestNode, neighbour));
+            childParentMap.put(neighbour, closestNode);
+            weightOfNodesWithHeuristicMap.put(neighbour, weightOfNodesMap.get(neighbour) + heuristic.get(neighbour));
           }
         }
       }
