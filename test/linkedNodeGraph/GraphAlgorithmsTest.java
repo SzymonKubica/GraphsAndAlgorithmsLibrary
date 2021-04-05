@@ -3,6 +3,8 @@ package linkedNodeGraph;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphAlgorithmsTest {
@@ -82,14 +84,55 @@ public class GraphAlgorithmsTest {
 
   @Test
   public void shortestPathAStarTest() {
-    WeightedGraph<Integer> graphForAStar = getWeightedGraphForDijkstraShortestPath();
+    WeightedGraph<Character> graphForAStar = new WeightedGraph<>();
 
-    String expected = "[(Node: 1), (Node: 3), (Node: 4), (Node: 5), (Node: 6), (Node: 7)]";
+    Node<Character> nodeA = new Node<>('A', graphForAStar);
+    Node<Character> nodeB = new Node<>('B', graphForAStar);
+    Node<Character> nodeC = new Node<>('C', graphForAStar);
+    Node<Character> nodeD = new Node<>('D', graphForAStar);
+    Node<Character> nodeE = new Node<>('E', graphForAStar);
+    Node<Character> nodeF = new Node<>('F', graphForAStar);
+    Node<Character> nodeG = new Node<>('G', graphForAStar);
+    Node<Character> nodeH = new Node<>('H', graphForAStar);
+    Node<Character> nodeI = new Node<>('I', graphForAStar);
+    Node<Character> nodeJ = new Node<>('J', graphForAStar);
+    Node<Character> nodeK = new Node<>('K', graphForAStar);
+
+    Map<Node<Character>, Integer> heuristic = new HashMap<>();
+    heuristic.put(nodeA, 9);
+    heuristic.put(nodeB, 7);
+    heuristic.put(nodeC, 3);
+    heuristic.put(nodeD, 0);
+    heuristic.put(nodeE, 2);
+    heuristic.put(nodeF, 5);
+    heuristic.put(nodeG, 8);
+    heuristic.put(nodeH, 10);
+    heuristic.put(nodeI, 12);
+    heuristic.put(nodeJ, 11);
+    heuristic.put(nodeK, 10);
+
+    graphForAStar.addEdgeWithWeight(nodeA, nodeB, 3);
+    graphForAStar.addEdgeWithWeight(nodeA, nodeF, 8);
+    graphForAStar.addEdgeWithWeight(nodeA, nodeH, 2);
+    graphForAStar.addEdgeWithWeight(nodeA, nodeJ, 3);
+    graphForAStar.addEdgeWithWeight(nodeA, nodeK, 2);
+    graphForAStar.addEdgeWithWeight(nodeB, nodeC, 5);
+    graphForAStar.addEdgeWithWeight(nodeB, nodeK, 4);
+    graphForAStar.addEdgeWithWeight(nodeC, nodeD, 4);
+    graphForAStar.addEdgeWithWeight(nodeC, nodeE, 3);
+    graphForAStar.addEdgeWithWeight(nodeC, nodeF, 3);
+    graphForAStar.addEdgeWithWeight(nodeD, nodeE, 3);
+    graphForAStar.addEdgeWithWeight(nodeE, nodeF, 4);
+    graphForAStar.addEdgeWithWeight(nodeG, nodeF, 4);
+    graphForAStar.addEdgeWithWeight(nodeG, nodeH, 3);
+    graphForAStar.addEdgeWithWeight(nodeJ, nodeH, 2);
+    graphForAStar.addEdgeWithWeight(nodeJ, nodeI, 2);
+    graphForAStar.addEdgeWithWeight(nodeH, nodeI, 3);
+    graphForAStar.addEdgeWithWeight(nodeK, nodeJ, 2);
+
+    String expected = "[(Node: A), (Node: B), (Node: C), (Node: D)]";
     Assert.assertEquals(expected,
-            GraphAlgorithms.shortestPathFromTo_Dijkstra(
-                    graphForAStar.first,
-                    graphForAStar.nodes.stream().filter(node -> node.element == 7)
-                            .collect(Collectors.toList()).get(0), graphForAStar).toString());
+            GraphAlgorithms.shortestPathFromTo_AStar(nodeA, nodeD, graphForAStar, heuristic).toString());
   }
 
   private DirectedGraph<Integer> getIntegerDirectedGraph() {
