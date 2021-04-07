@@ -9,7 +9,7 @@ public class SortingAlgorithms {
     array[3] = 2;
 
     printArray(array);
-    mergeSort(array);
+    quickSort(array);
     printArray(array);
 
     System.out.println(secondLargestEntry(array));
@@ -28,7 +28,7 @@ public class SortingAlgorithms {
   }
 
   private static void mergeSort(int[] xs) {
-    copySubArray(mergeSort(xs, 0, xs.length - 1), xs, 0);
+    copy(mergeSort(xs, 0, xs.length - 1), xs);
   }
 
   private static int[] mergeSort(int[] xs, int left, int right) {
@@ -59,6 +59,35 @@ public class SortingAlgorithms {
     return result;
   }
 
+  private static void quickSort(int[] xs) {
+    quickSort(xs, 0, xs.length - 1);
+  }
+
+  private static void quickSort(int[] xs, int left, int right) {
+    if (left < right) {
+      int s = split(xs, left, right);
+      quickSort(xs, left, s - 1);
+      quickSort(xs, s + 1, right);
+    }
+  }
+
+  private static int split(int[] xs, int left, int right) {
+    assert left < right;
+    int pivot = xs[left];
+    int leftPointer = left + 1;
+    int rightPointer = right;
+
+    while (leftPointer <= rightPointer) {
+      if (xs[leftPointer] <= pivot) { // The element is in the correct sub array.
+        leftPointer++;
+      } else { // The element is greater than the pivot and needs to be swapped.
+        swap(xs, leftPointer, rightPointer);
+        rightPointer--;
+      }
+    }
+    swap(xs, left, rightPointer); // Inserting the pivot in the correct place.
+    return rightPointer;
+  }
 
   private static void swap(int[] xs, int position1, int position2) {
     int temp = xs[position1];
@@ -80,6 +109,10 @@ public class SortingAlgorithms {
       destination[i] = source[position];
       position++;
     }
+  }
+
+  private static void copy(int[] source, int[] destination) {
+    copySubArray(source, destination, 0);
   }
 
   private static int secondLargestEntry(int[] xs) {
