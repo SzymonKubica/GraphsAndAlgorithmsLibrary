@@ -1,4 +1,3 @@
-import linkedNodeGraph.GraphAlgorithmsTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -7,6 +6,7 @@ public class TestSuiteRunner {
   public static void main(String[] args) {
     Result result =
             JUnitCore.runClasses(
+                    algorithms.ListAlgorithmsTest.class,
                     algorithms.SortingAlgorithmsTest.class,
                     linkedNodeGraph.DirectedGraphTest.class,
                     linkedNodeGraph.GraphAlgorithmsTest.class,

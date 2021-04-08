@@ -2,20 +2,8 @@ package algorithms;
 
 import java.util.Optional;
 
-public class ListAlgorithms {
-  public static void main(String[] args) {
-    int[] array = new int[3];
-    array[0] = 2;
-    array[1] = 1;
-    array[2] = 3;
-    System.out.println(isSorted(array));
-    System.out.println(linearSearch(2, array).get());
-    System.out.println(modifiedLinearSearch(3, array).get());
-    System.out.println(binarySearch(1, array).get());
-    System.out.println(secondLargestEntry(array));
-  }
-
-  private static Optional<Integer> linearSearch(int x, int[] xs) {
+public abstract class ListAlgorithms {
+  public static Optional<Integer> linearSearch(int x, int[] xs) {
     try {
       return Optional.of(linearSearchUnsafe(x, xs));
     } catch (ItemNotFoundException e) {
@@ -35,7 +23,7 @@ public class ListAlgorithms {
     throw new ItemNotFoundException();
   }
 
-  private static Optional<Integer> modifiedLinearSearch(int x, int[] xs) {
+  public static Optional<Integer> modifiedLinearSearch(int x, int[] xs) {
     try {
       return Optional.of(modifiedLinearSearchUnsafe(x, xs));
     } catch (ItemNotFoundException e) {
@@ -59,16 +47,17 @@ public class ListAlgorithms {
     throw new ItemNotFoundException();
   }
 
-  private static Optional<Integer> binarySearch(int x, int[] xs) {
+  public static Optional<Integer> binarySearch(int x, int[] xs) {
     try {
-      return Optional.of(binarySearchInner(x, xs, 0, xs.length - 1));
+      return Optional.of(binarySearch(x, xs, 0, xs.length - 1));
     } catch (ItemNotFoundException e) {
       System.out.println(e.getMessage());
       return Optional.empty();
     }
   }
 
-  private static int binarySearchInner(int x, int[] xs, int left, int right) throws ItemNotFoundException {
+  private static int binarySearch(int x, int[] xs, int left, int right) throws ItemNotFoundException {
+    assert isSorted(xs);
     if (left > right) {
       throw new ItemNotFoundException();
     } else {
@@ -76,14 +65,14 @@ public class ListAlgorithms {
       if (xs[mid] == x) {
         return mid;
       } else if (xs[mid] > x) {
-        return binarySearchInner(x, xs, left, mid - 1);
+        return binarySearch(x, xs, left, mid - 1);
       } else {
-        return binarySearchInner(x, xs, mid + 1, right);
+        return binarySearch(x, xs, mid + 1, right);
       }
     }
   }
 
-  private static boolean isSorted(int[] xs) {
+  public static boolean isSorted(int[] xs) {
     int pointer = 0;
     boolean isSorted = true;
     while (pointer < xs.length - 1) {
@@ -113,6 +102,7 @@ public class ListAlgorithms {
   }
 
   public static void copy(int[] source, int[] destination) {
+    assert source.length == destination.length : "Arrays need to be of the same length.";
     copySubArray(source, destination, 0);
   }
 
@@ -134,7 +124,7 @@ public class ListAlgorithms {
 
   }
 
-  private static int secondLargestEntry(int[] xs) {
+  public static int secondLargestEntry(int[] xs) {
     pushLargestEntryAtTheEnd(xs);
     // pushing second largest entry at the penultimate position in the array.
     pushLargestEntryAtTheEnd(xs);
