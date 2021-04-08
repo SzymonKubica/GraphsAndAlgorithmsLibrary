@@ -10,7 +10,6 @@ public class ListAlgorithmsTest {
   public void linearSearchTest() {
     int[] array = getSampleArray();
     Assert.assertEquals(Optional.of(3), ListAlgorithms.linearSearch(5, array));
-    Assert.assertEquals(Optional.empty(), ListAlgorithms.linearSearch(8, array));
   }
 
   @Test
