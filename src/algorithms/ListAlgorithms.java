@@ -1,4 +1,4 @@
-package Algorithms;
+package algorithms;
 
 import java.util.Optional;
 
@@ -12,6 +12,7 @@ public class ListAlgorithms {
     System.out.println(linearSearch(2, array).get());
     System.out.println(modifiedLinearSearch(3, array).get());
     System.out.println(binarySearch(1, array).get());
+    System.out.println(secondLargestEntry(array));
   }
 
   private static Optional<Integer> linearSearch(int x, int[] xs) {
@@ -90,5 +91,63 @@ public class ListAlgorithms {
       pointer++;
     }
     return isSorted;
+  }
+
+  public static void swap(int[] xs, int position1, int position2) {
+    int temp = xs[position1];
+    xs[position1] = xs[position2];
+    xs[position2] = temp;
+  }
+
+  public static String printArray(int[] xs) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+    for (int item : xs) {
+      sb.append(item);
+      if (item != xs[xs.length - 1]) {
+        sb.append(", ");
+      }
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
+  public static void copy(int[] source, int[] destination) {
+    copySubArray(source, destination, 0);
+  }
+
+  public static void copySubArray(int[] source, int[] destination, int position) {
+    assert position + destination.length <= source.length;
+    for (int i = 0; i < destination.length; i++) {
+      destination[i] = source[position];
+      position++;
+    }
+  }
+
+  public static void copySubArray(int[] source, int[] destination, int sourcePointer, int destinationPointer) {
+    assert destinationPointer + (source.length - sourcePointer) <= destination.length;
+    while (destinationPointer < destination.length){
+      destination[destinationPointer] = source[sourcePointer];
+      destinationPointer++;
+      sourcePointer++;
+    }
+
+  }
+
+  private static int secondLargestEntry(int[] xs) {
+    pushLargestEntryAtTheEnd(xs);
+    // pushing second largest entry at the penultimate position in the array.
+    pushLargestEntryAtTheEnd(xs);
+    return xs[xs.length - 2];
+  }
+
+  private static void pushLargestEntryAtTheEnd(int[] xs) {
+    int pointer = 0;
+    while (pointer < xs.length - 1) {
+      if (xs[pointer] > xs[pointer + 1]) {
+        ListAlgorithms.swap(xs, pointer, pointer + 1);
+      }
+      pointer++;
+    }
   }
 }

@@ -60,13 +60,13 @@ public class GraphAlgorithmsTest {
   @Test
   public void kruskalMSTTest() {
     WeightedGraph<Integer> graphForMST = getWeightedGraphForMST();
-    Tree<Integer> minimumSpanningTree = GraphAlgorithms.MST_Kruskal(graphForMST, graphForMST.first);
+    Tree<Integer> minimumSpanningTree2 = GraphAlgorithms.MST_Kruskal(graphForMST, graphForMST.first);
     Assert.assertEquals(
-            "(Node: 1) -> (Node: 2) -> (Node: 4) \n" +
-                    "(Node: 2) -> (Node: 1) \n" +
-                    "(Node: 3) -> (Node: 4) \n" +
-                    "(Node: 4) -> (Node: 3) -> (Node: 1) \n",
-            minimumSpanningTree.toString()
+            "(Node: 1) -> (Node: 2) \n" +
+                    "(Node: 2) -> (Node: 1) -> (Node: 3) \n" +
+                    "(Node: 3) -> (Node: 4) -> (Node: 2) \n" +
+                    "(Node: 4) -> (Node: 3) \n",
+            minimumSpanningTree2.toString()
     );
   }
 
